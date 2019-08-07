@@ -158,15 +158,32 @@ void loop ()
       SunRize = bhopal.sunrise(now.Year(), now.Month(), now.Day(), true);
       SunSet = bhopal.sunset(now.Year(), now.Month(), now.Day(), true);
     }
+
     MinutesSinceMidnight = now.Hour() * 60 + now.Minute();
-    if(MinutesSinceMidnight == SunRize){
+    /* if(MinutesSinceMidnight == SunRize){
       digitalWrite(LightSwitch, LOW);
     }
     if(MinutesSinceMidnight == SunSet){
       digitalWrite(LightSwitch, HIGH);
+    }*/
+
+    if(0 <= MinutesSinceMidnight && MinutesSinceMidnight < SunRize){
+      Switch_Light_On();
+    } else if(SunRize <= MinutesSinceMidnight && MinutesSinceMidnight < SunSet) {
+      Switch_Light_Off();
+    } else if(SunSet <= MinutesSinceMidnight && MinutesSinceMidnight < 1440) {
+      Switch_Light_On();
     }
 
     delay(10000); // ten seconds
+}
+
+void Switch_Light_On() {
+  if(digitalRead(LightSwitch) != HIGH) digitalWrite(LightSwitch, HIGH);
+}
+
+void Switch_Light_Off() {
+  if(digitalRead(LightSwitch) != LOW) digitalWrite(LightSwitch, LOW);
 }
 
 #define countof(a) (sizeof(a) / sizeof(a[0]))
